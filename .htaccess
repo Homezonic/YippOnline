@@ -1,0 +1,53 @@
+# Akande Joshua © Retail Store 2023
+
+# Redirect HTTP client and server errors to custom error page
+ErrorDocument 400 error
+ErrorDocument 403 error
+ErrorDocument 404 error
+ErrorDocument 405 error
+ErrorDocument 408 error
+ErrorDocument 500 error
+ErrorDocument 502 error
+ErrorDocument 504 error
+ErrorDocument 508 error
+
+# Hide PHP file extension from URLs
+<IfModule mod_rewrite.c>
+	RewriteEngine on
+	RewriteCond %{THE_REQUEST} \s/+([^?]+?)\.php[\s?] [NC]
+	RewriteRule ^ /%1 [R=302,NE,L]
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^(.+)/$ /$1 [NE,R=302,L]
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_FILENAME}\.php -f
+	RewriteRule ^(.*)$ $1.php
+	RewriteCond %{THE_REQUEST} ^.*/index
+	RewriteRule ^(.*)index.php$ /$1 [R=301,L]
+</IfModule>
+
+# Enable GZIP text compression for speed improvements
+<IfModule mod_filter.c>
+	AddOutputFilterByType DEFLATE text/html
+	AddOutputFilterByType DEFLATE text/css
+	AddOutputFilterByType DEFLATE application/javascript
+</IfModule>
+
+# Expire cache after 1 year
+<IfModule mod_headers.c>
+	<FilesMatch "\.(jpg|jpeg|png|svg|mp4|woff|woff2)$">
+		Header set Cache-Control "max-age=31536000, public"
+	</FilesMatch>
+	<FilesMatch "\.(html|css|js|php)$">
+		Header set Cache-Control "max-age=31536000"
+	</FilesMatch>
+</IfModule>
+
+# Enable PHP compression
+# php_flag zlib.output_compression On
+# php_value zlib.output_compression_level 5
+
+# Set PHP timezone to UTC +4
+# php_value date.timezone 'Asia/Dubai'
+
+# Disable index listing of directories
+Options -Indexes
